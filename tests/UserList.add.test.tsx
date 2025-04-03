@@ -13,11 +13,12 @@ vi.mock("../services/user-service", () => ({
   update: vi.fn(() => Promise.resolve()),
 }));
 
-describe("UserList", async () => {
+describe("UserList", () => {
   it("adds a user when the Add button is clicked", async () => {
     render(<UserList />);
 
     const addButton = screen.getByText("Add");
+    expect(addButton).toBeInTheDocument();
     fireEvent.click(addButton);
 
     await waitFor(() => {
