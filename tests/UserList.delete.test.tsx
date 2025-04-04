@@ -1,15 +1,6 @@
+import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import UserList from "../src/components/UserList";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import "@testing-library/jest-dom";
-import React from "react";
-import userService from "../src/services/user-service";
-
-let mockUsers = [
-  { id: 1, name: "Leanne Graham" },
-];
-
+// Mock the user service
 vi.mock("../services/user-service", () => ({
   create: vi.fn(({ name }) => {
     const newUser = { id: mockUsers.length + 1, name };
@@ -26,17 +17,35 @@ vi.mock("../services/user-service", () => ({
     );
     return Promise.resolve();
   }),
+  getAll: vi.fn(() => {
+    return {
+      request: Promise.resolve({ data: mockUsers }), // This resolves with mock data
+      cancel: vi.fn(), // You can mock the cancel function, though it's not used in the test
+    };
+  }),
 }));
+
+
+
+
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import UserList from "../src/components/UserList";
+import "@testing-library/jest-dom";
+import React from "react";
+import userService from "../src/services/user-service";
+
+
+let mockUsers = [
+  { id: 1, name: "Leanne Graham" },
+];
 
 // clears the mock before each test
 beforeEach(() => {
-  vi.clearAllMocks(); // ✅ Clears previous mock calls before each test
+  vi.clearAllMocks();
 });
-
 
 describe("UserList", () => {
   console.log("This is the delete log:", userService.delete);
-
 
   it("deletes a user when the delete button is clicked", async () => {
     render(<UserList />);
@@ -49,26 +58,13 @@ describe("UserList", () => {
     // Click the first delete button
     const deleteButtons = screen.getAllByText("Delete");
     fireEvent.click(deleteButtons[0]);
-  
-    // Ensure userService.delete() was called
-    //expect(userService.delete).toHaveBeenCalledWith(1);
+
+    console.log("Mock calls:", (userService.delete as Mock).mock.calls);
+    expect(userService.delete).toHaveBeenCalledTimes(1);
   
     // Wait for user to be removed from UI
     await waitFor(() => {
       expect(screen.queryByText("Leanne Graham")).not.toBeInTheDocument();
     });
   });
-/*   
-beforeEach(() => {
-  mockUsers = [
-    { id: 1, name: "Leanne Graham" },
-  ];
-  vi.clearAllMocks();
-  });
-  function beforeEach(arg0: () => void) {
-    throw new Error("Function not implemented.");
-  }
-});
- */
-
 });

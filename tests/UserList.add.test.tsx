@@ -4,14 +4,14 @@ import { describe, it, expect, vi } from "vitest";
 import "@testing-library/jest-dom";
 import React from "react";
 
-// Mock user service
+/* // Mock the user service
 vi.mock("../services/user-service", () => ({
   create: vi.fn(() =>
     Promise.resolve({ data: { id: 1, name: "Jdog" } })
   ),
   delete: vi.fn(() => Promise.resolve()),
   update: vi.fn(() => Promise.resolve()),
-}));
+})); */
 
 describe("UserList", () => {
   it("adds a user when the Add button is clicked", async () => {
