@@ -9,9 +9,12 @@ const useUsers = () => {
 
   useEffect(() => {
     setLoading(true);
+    console.log(">>> useUsers getting called")
     const { request, cancel } = userService.getAll<User>();
+    console.log(">>> request ob:", request)
     request
       .then((res) => {
+        console.log(">>> useUsers result:", res)
         setUsers(res.data);
         setLoading(false);
       })
