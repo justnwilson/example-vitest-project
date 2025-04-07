@@ -51,10 +51,7 @@ vi.mock("../src/services/user-service", () => ({
 
 // Clears the mock before each test
 beforeEach(() => {
-  console.log(">>> woohoo, i'm running another test!")
-  console.log(">>> the user state was:", mockUsers)
   mockUsers = [...baseUsers] // Reset the mockUsers array for the next test
-  console.log(">>> just to make sure, after the reset, mockUsers now =", mockUsers)
   vi.clearAllMocks();
 });
 
