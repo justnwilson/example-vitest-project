@@ -7,7 +7,6 @@ interface UserListProps {
 
   const deleteUser = (user: User) => {
     const originalUsers = [...users];
-    console.log(">>> hit deleteUser")
     setUsers(users.filter((u) => u.id !== user.id));
 
     userService.delete(user.id).catch((err) => {
@@ -40,8 +39,6 @@ interface UserListProps {
       setUsers(originalUsers);
     });
   };
-
-  console.log(">>> users:", users)
 
   return (
     <div>
