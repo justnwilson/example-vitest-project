@@ -6,11 +6,11 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import React from "react";
 
-let mockUsers: User[] = [
+const baseUsers: User[] = [
   { id: 1, name: "Leanne Graham" },
   { id: 2, name: "Ervin Howell" }
-  
-];
+]
+let mockUsers: User[] = [...baseUsers];
 
 // This is still hoisted because it needs to exist before that user service is imported in UserList, which is right there
 // caught and overridden by vi.mock below.
@@ -51,6 +51,10 @@ vi.mock("../src/services/user-service", () => ({
 
 // Clears the mock before each test
 beforeEach(() => {
+  console.log(">>> woohoo, i'm running another test!")
+  console.log(">>> the user state was:", mockUsers)
+  mockUsers = [...baseUsers] // Reset the mockUsers array for the next test
+  console.log(">>> just to make sure, after the reset, mockUsers now =", mockUsers)
   vi.clearAllMocks();
 });
 
@@ -72,8 +76,8 @@ describe("Delete", () => {
     await waitFor(() => {
       expect(screen.queryByText("Leanne Graham")).not.toBeInTheDocument();
     });
-    });
   });
+});
 
 
 // This is a test for the add user button.
@@ -81,20 +85,20 @@ describe("Add", () => {
 
   // Add user test
   it("should add a user when the add button is clicked", async () => {
-  render(<UserList />);
-  // Wait for users to be displayed
-  await waitFor(() => {
-    expect(screen.getByText("Add")).toBeInTheDocument();
-  });
-  // Click the add button
-  const addButton = screen.getByText("Add");
-  fireEvent.click(addButton);
-  // Wait for the new user to be displayed
-  await waitFor(() => {
-    expect(screen.getByText("Jdog")).toBeInTheDocument();
+    render(<UserList />);
+    // Wait for users to be displayed
+    await waitFor(() => {
+      expect(screen.getByText("Add")).toBeInTheDocument();
+    });
+    // Click the add button
+    const addButton = screen.getByText("Add");
+    fireEvent.click(addButton);
+    // Wait for the new user to be displayed
+    await waitFor(() => {
+      expect(screen.getByText("Jdog")).toBeInTheDocument();
+    });
   });
 });
-}); 
 
 
 // This is a test for the update user button.
