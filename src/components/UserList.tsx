@@ -1,9 +1,8 @@
-import React from "react";
+import useUsers from "../hooks/useUsers";
+import userService, { User } from "../services/user-service";
 
-interface UserListProps {
-  users: { id: number; name: string }[];
-}
-
+const UserList = () => {
+  const { users, error, isLoading, setUsers, setError } = useUsers();
 
   const deleteUser = (user: User) => {
     const originalUsers = [...users];
@@ -41,12 +40,39 @@ interface UserListProps {
   };
 
   return (
-    <div>
-        {defaultUsers.map((user: { id: React.Key | null | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => (
-            <div key={user.id}>{user.name}</div>
+    <>
+      {error && <p className="text-danger">{error}</p>}
+      {isLoading && <div className="spinner-border"></div>}
+      <button className="btn btn-primary mb-3" onClick={addUser}>
+        Add
+      </button>
+      <ul className="list-group">
+        {users.map((user) => (
+          <li
+            key={user.id}
+            className="list-group-item d-flex justify-content-between"
+          >
+            {user.name}
+            <div>
+              <button
+                className="btn btn-outline-secondary mx-1"
+                onClick={() => updateUser(user)}
+              >
+                Update
+              </button>
+              <button
+                className="btn btn-outline-danger"
+                onClick={() => deleteUser(user)}
+              >
+                Delete
+              </button>
+            </div>
+          </li>
         ))}
-    </div>
-);
+      </ul>
+    </>
+  );
 };
 
 export default UserList;
+
