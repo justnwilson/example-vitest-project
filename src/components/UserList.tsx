@@ -6,7 +6,6 @@ const UserList = () => {
 
   const deleteUser = (user: User) => {
     const originalUsers = [...users];
-    console.log(">>> hit deleteUser")
     setUsers(users.filter((u) => u.id !== user.id));
 
     userService.delete(user.id).catch((err) => {
@@ -39,8 +38,6 @@ const UserList = () => {
       setUsers(originalUsers);
     });
   };
-
-  console.log(">>> users:", users)
 
   return (
     <>
