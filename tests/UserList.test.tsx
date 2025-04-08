@@ -12,8 +12,7 @@ const baseUsers: User[] = [
 ]
 let mockUsers: User[] = [...baseUsers];
 
-// This is still hoisted because it needs to exist before that user service is imported in UserList, which is right there
-// caught and overridden by vi.mock below.
+
 const mockUserService = vi.hoisted(() => ({
   create: vi.fn(({ name }) => {
     const newUser = { id: mockUsers.length + 1, name };
@@ -33,25 +32,19 @@ const mockUserService = vi.hoisted(() => ({
   getAll: vi.fn(() => {
     return {
       request: Promise.resolve({ data: mockUsers }), // This resolves with mock data
-      cancel: vi.fn(), // Mock the cancel function, though it's not used in the test
+      cancel: vi.fn(), 
     };
   }),
 }));
 
-// Mock the user service. As far as I can tell, this basically catches that import, and inserts
-// the passed in value here for it instead. So if we were doing this in Simone we'd probably either
-// mock API.js directly (which we use for most calls right now) or else upgrade those into the more
-// modern "service pattern" that you see here (a service is a dedicated piece of code that just handles
-// the api call for a specific record, in this case users. We are still wrapping it with RQ in useUsers.
-// As you can see, having it be modular like that allows us to *only* swap out the API call code without
-// impacting anything else in the codebase. Pretty cool!)
+
 vi.mock("../src/services/user-service", () => ({
   default: mockUserService
 }));
 
 // Clears the mock before each test
 beforeEach(() => {
-  mockUsers = [...baseUsers] // Reset the mockUsers array for the next test
+  mockUsers = [...baseUsers]
   vi.clearAllMocks();
 });
 
@@ -77,7 +70,7 @@ describe("Delete", () => {
 });
 
 
-// This is a test for the add user button.
+// This is a test to add a user
 describe("Add", () => {
 
   // Add user test
@@ -98,7 +91,7 @@ describe("Add", () => {
 });
 
 
-// This is a test for the update user button.
+// This is a test to update a user
 describe("Update", () => {
 
   it("should update a user when the update button is clicked", async () => {
